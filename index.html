@@ -1,19 +1,44 @@
 <html>
-    <head>
-        <title>JQuery</title>
-        <script src="jquery.min.js"></script>
 
-    </head>
+<head>
+  <title>MyWork</title>
+  <style>
+    .important {
+      font-weight: bold;
+      font-size: xx-large;
+    }
+
+    .blue {
+      color: blue;
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="moment.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $("#calc_btn").click(function() {
+        var d = moment($("#LMP").val());
+        var b = d.clone().add(40, 'week');
+
+        $("#EDC_html").text(b.format('YYYY-MM-DD'));
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <input type="date" value="2019-01-01" id="LMP" />
+  <input type=button value="Calc" id="calc_btn"></button>
+  <br />
+  <p id="EDC_html"> 2019-10-10 </p>
 
 
-    <body>
-      This is a test!
-        <script type="text/javascript">
 
-           if (typeof jQuery == "undefined"){
-                alert("Oh no");} else{alert("good!");}
-        </script>
+  <!-- JAVASCRIPT section -->
 
-    </body>
+
+</body>
 
 </html>

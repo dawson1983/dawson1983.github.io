@@ -12,31 +12,134 @@
       color: blue;
     }
   </style>
+  <link rel="stylesheet" href="JS/jquery-ui.min.css">
+  <script src="JS/moment.min.js"></script>
+  <script src="JS/jquery-3.4.1.min.js"></script>
+  <script src="JS/jquery-ui.min.js"></script>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="moment.min.js"></script>
+  <!--
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> -->
+
 
   <script>
     $(document).ready(function() {
-      $("#calc_btn").click(function() {
-        var d = moment($("#LMP").val());
-        var b = d.clone().add(40, 'week');
+      // 完成載入才執行以下JS
 
-        $("#EDC_html").text(b.format('YYYY-MM-DD'));
+      // 改變LMP則改變EDC
+      // $("#LMP").change(function() {
+      //   var LMP = moment($("#LMP").val());
+      //   var EDC = LMP.clone().add(40, 'week');
+      //   $("#EDC").val(EDC.format('YYYY-MM-DD'));
+      // });
+
+      // 改變EDC則改變LMP
+      // $("#EDC").change(function() {
+      //   var EDC = moment($("#EDC").val());
+      //   var LMP = EDC.clone().subtract(40, 'week');
+      //   $("#LMP").val(LMP.format('YYYY-MM-DD'));
+      // });
+      // 若改變LMP
+      $("#LMP").change(function() {
+        var LMP = moment($("#LMP").val());
+        var EDC = LMP.clone().add(40, 'week');
+        var now = moment();
+        var GA = (now - LMP) / 86400000 / 7;
+        var GA_w = parseInt(GA);
+        var GA_d = parseInt((GA - GA_w) * 7);
+        $("#GA_w").val(GA_w);
+        $("#GA_d").val(GA_d);
+        $("#EDC").val(EDC.format('YYYY-MM-DD'));
       });
+      // 若改變EDC
+      $("#EDC").change(function() {
+        var EDC = moment($("#EDC").val());
+        var LMP = EDC.clone().subtract(40, 'week');
+        var now = moment();
+        var GA = (now - LMP) / 86400000 / 7;
+        var GA_w = parseInt(GA);
+        var GA_d = parseInt((GA - GA_w) * 7);
+        $("#GA_w").val(GA_w);
+        $("#GA_d").val(GA_d);
+        $("#LMP").val(LMP.format('YYYY-MM-DD'));
+      });
+      // 若改變GA
+      $("#GA_w").change(function() {
+        var GA_w = $("#GA_w").val();
+        var GA_d = $("#GA_d").val();
+        var now = moment();
+        var GA = GA_w * 7 + GA_d * 1;
+        var LMP = now.clone().subtract(GA, 'day');
+        var EDC = LMP.clone().add(40, 'week');
+        $("#LMP").val(LMP.format('YYYY-MM-DD'));
+        $("#EDC").val(EDC.format('YYYY-MM-DD'));
+      });
+      $("#GA_d").change(function() {
+        var GA_w = $("#GA_w").val();
+        var GA_d = $("#GA_d").val();
+        var now = moment();
+        var GA = GA_w * 7 + GA_d * 1;
+        var LMP = now.clone().subtract(GA, 'day');
+        var EDC = LMP.clone().add(40, 'week');
+        $("#LMP").val(LMP.format('YYYY-MM-DD'));
+        $("#EDC").val(EDC.format('YYYY-MM-DD'));
+      });
+      // Datapicker
+      $("#LMP").datepicker({
+        dateFormat: 'yy-mm-dd'
+      });
+      $("#EDC").datepicker({
+        dateFormat: 'yy-mm-dd'
+      });
+      // Spinner
+      var spinner = $("#GA_w").spinner();
+      $("#GA_d").spinner();
+      $("#Add5w").on("click", function() {
+        spinner.spinner("value", spinner.spinner("value") + 5);
+
+      });
+      $("#Sub5w").on("click", function() {
+        spinner.spinner("value", spinner.spinner("value") - 5);
+      });
+      // Calc calc_btn
+      $("#calc_btn").on("click", function() {
+        var GA_w = $("#GA_w").val();
+        var GA_d = $("#GA_d").val();
+        var now = moment();
+        var GA = GA_w * 7 + GA_d * 1;
+        var LMP = now.clone().subtract(GA, 'day');
+        var EDC = LMP.clone().add(40, 'week');
+        $("#LMP").val(LMP.format('YYYY-MM-DD'));
+        $("#EDC").val(EDC.format('YYYY-MM-DD'));
+        $("#GA_w").val(GA_w);
+        $("#GA_d").val(GA_d);
+      })
+      // 完成載入才執行以下JS
     });
   </script>
+
 </head>
 
 <body>
-  <input type="date" value="2019-01-01" id="LMP" />
-  <input type=button value="Calc" id="calc_btn"></button>
+  <b>LMP</b>
+  <input type="text" value="2019-01-01" id="LMP" />
+  <b>EDC</b>
+  <input type="text" value="2019-01-01" id="EDC" />
+  <br>
+  <b>GA Today</b>
+  <input type="text" id="GA_w" value="0" />
+  <input type="text" id="GA_d" value="0" /><br />
+  <button id="Add5w">+5w</button>
+  <button id="Sub5w">-5w</button>
+  <br><br>
+
+  <input type="button" value="Calc" id="calc_btn"></button>
   <br />
   <p id="EDC_html"> 2019-10-10 </p>
 
 
 
-  <!-- JAVASCRIPT section -->
 
 
 </body>

@@ -2,15 +2,9 @@
 
 <head>
   <title>MyWork</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    .important {
-      font-weight: bold;
-      font-size: xx-large;
-    }
 
-    .blue {
-      color: blue;
-    }
   </style>
   <link rel="stylesheet" href="JS/jquery-ui.min.css">
   <script src="JS/moment.min.js"></script>
@@ -27,19 +21,6 @@
     $(document).ready(function() {
       // 完成載入才執行以下JS
 
-      // 改變LMP則改變EDC
-      // $("#LMP").change(function() {
-      //   var LMP = moment($("#LMP").val());
-      //   var EDC = LMP.clone().add(40, 'week');
-      //   $("#EDC").val(EDC.format('YYYY-MM-DD'));
-      // });
-
-      // 改變EDC則改變LMP
-      // $("#EDC").change(function() {
-      //   var EDC = moment($("#EDC").val());
-      //   var LMP = EDC.clone().subtract(40, 'week');
-      //   $("#LMP").val(LMP.format('YYYY-MM-DD'));
-      // });
       // 若改變LMP
       $("#LMP").change(function() {
         var LMP = moment($("#LMP").val());
@@ -50,7 +31,12 @@
         var GA_d = parseInt((GA - GA_w) * 7);
         $("#GA_w").val(GA_w);
         $("#GA_d").val(GA_d);
-        $("#EDC").val(EDC.format('YYYY-MM-DD'));
+        $("#EDC").val(EDC.format('YYYYMMDD'));
+        var GA37 = LMP.clone().add(37, 'week');
+        var GA39 = LMP.clone().add(39, 'week');
+        $("#GA37").val(GA37.format('YYYYMMDD'));
+        $("#GA39").val(GA39.format('YYYYMMDD'));
+
       });
       // 若改變EDC
       $("#EDC").change(function() {
@@ -62,86 +48,87 @@
         var GA_d = parseInt((GA - GA_w) * 7);
         $("#GA_w").val(GA_w);
         $("#GA_d").val(GA_d);
-        $("#LMP").val(LMP.format('YYYY-MM-DD'));
+        $("#LMP").val(LMP.format('YYYYMMDD'));
+        var GA37 = LMP.clone().add(37, 'week');
+        var GA39 = LMP.clone().add(39, 'week');
+        $("#GA37").val(GA37.format('YYYYMMDD'));
+        $("#GA39").val(GA39.format('YYYYMMDD'));
       });
       // 若改變GA
-      $("#GA_w").change(function() {
-        var GA_w = $("#GA_w").val();
-        var GA_d = $("#GA_d").val();
-        var now = moment();
-        var GA = GA_w * 7 + GA_d * 1;
-        var LMP = now.clone().subtract(GA, 'day');
-        var EDC = LMP.clone().add(40, 'week');
-        $("#LMP").val(LMP.format('YYYY-MM-DD'));
-        $("#EDC").val(EDC.format('YYYY-MM-DD'));
-      });
-      $("#GA_d").change(function() {
-        var GA_w = $("#GA_w").val();
-        var GA_d = $("#GA_d").val();
-        var now = moment();
-        var GA = GA_w * 7 + GA_d * 1;
-        var LMP = now.clone().subtract(GA, 'day');
-        var EDC = LMP.clone().add(40, 'week');
-        $("#LMP").val(LMP.format('YYYY-MM-DD'));
-        $("#EDC").val(EDC.format('YYYY-MM-DD'));
-      });
+      $("#GA_w").change(GA_changed);
+      $("#GA_d").change(GA_changed);
+
       // Datapicker
       $("#LMP").datepicker({
-        dateFormat: 'yy-mm-dd'
+        dateFormat: 'yymmdd'
       });
       $("#EDC").datepicker({
-        dateFormat: 'yy-mm-dd'
+        dateFormat: 'yymmdd'
       });
-      // Spinner
-      var spinner = $("#GA_w").spinner();
-      $("#GA_d").spinner();
-      $("#Add5w").on("click", function() {
-        spinner.spinner("value", spinner.spinner("value") + 5);
 
-      });
-      $("#Sub5w").on("click", function() {
-        spinner.spinner("value", spinner.spinner("value") - 5);
-      });
-      // Calc calc_btn
-      $("#calc_btn").on("click", function() {
-        var GA_w = $("#GA_w").val();
-        var GA_d = $("#GA_d").val();
-        var now = moment();
-        var GA = GA_w * 7 + GA_d * 1;
-        var LMP = now.clone().subtract(GA, 'day');
-        var EDC = LMP.clone().add(40, 'week');
-        $("#LMP").val(LMP.format('YYYY-MM-DD'));
-        $("#EDC").val(EDC.format('YYYY-MM-DD'));
-        $("#GA_w").val(GA_w);
-        $("#GA_d").val(GA_d);
-      })
-      // 完成載入才執行以下JS
+      // 完成載入才執行以上JS
+
+
     });
+    //Function script
+    function addWeek(week) {
+      $("#GA_w").val(parseInt($("#GA_w").val()) + week);
+      GA_changed();
+    }
+
+    function subWeek(week) {
+      $("#GA_w").val(parseInt($("#GA_w").val()) - week);
+      GA_changed();
+    }
+
+    function addDay(day) {
+      $("#GA_d").val(parseInt($("#GA_d").val()) + day);
+      GA_changed();
+    }
+
+    function subWeek(day) {
+      $("#GA_d").val(parseInt($("#GA_d").val()) - day);
+      GA_changed();
+    }
+
+    function GA_changed() {
+      var GA_w = $("#GA_w").val();
+      var GA_d = $("#GA_d").val();
+      var now = moment();
+      var GA = GA_w * 7 + GA_d * 1;
+      var LMP = now.clone().subtract(GA, 'day');
+      var EDC = LMP.clone().add(40, 'week');
+      $("#LMP").val(LMP.format('YYYYMMDD'));
+      $("#EDC").val(EDC.format('YYYYMMDD'));
+      var GA37 = LMP.clone().add(37, 'week');
+      var GA39 = LMP.clone().add(39, 'week');
+      $("#GA37").val(GA37.format('YYYYMMDD'));
+      $("#GA39").val(GA39.format('YYYYMMDD'));
+    }
   </script>
 
 </head>
 
 <body>
   <b>LMP</b>
-  <input type="text" value="2019-01-01" id="LMP" />
+  <input type="text" value="20190101" id="LMP" />
   <b>EDC</b>
-  <input type="text" value="2019-01-01" id="EDC" />
+  <input type="text" value="20190101" id="EDC" />
   <br>
   <b>GA Today</b>
-  <input type="text" id="GA_w" value="0" />
+  <input type="text" id="GA_w" value="40" />
   <input type="text" id="GA_d" value="0" /><br />
-  <button id="Add5w">+5w</button>
-  <button id="Sub5w">-5w</button>
-  <br><br>
-
-  <input type="button" value="Calc" id="calc_btn"></button>
+  <button onclick="javascript:addWeek(5)">+5w</button>
+  <button onclick="javascript:addWeek(1)">+1w</button>
+  <button onclick="javascript:addDay(1)">+1d</button>
   <br />
-  <p id="EDC_html"> 2019-10-10 </p>
-
-
-
-
-
+  <button onclick="javascript:addWeek(-5)">-5w</button>
+  <button onclick="javascript:addWeek(-1)">-1w</button>
+  <button onclick="javascript:addDay(-1)">-1d</button>
+  <br>
+  The date of GA 37 weeks is on <input type="text" value="" id="GA37" />
+  <br>
+  The date of GA 39 weeks is on <input type="text" value="" id="GA39" />
 </body>
 
 </html>

@@ -1,0 +1,140 @@
+<html>
+
+<head>
+  <title>MyWork</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    #wrapper {
+      width: 500px;
+      margin: 0 auto;
+    }
+  </style>
+  <link rel="stylesheet" href="JS/jquery-ui.min.css">
+  <script src="JS/moment.min.js"></script>
+  <script src="JS/jquery-3.4.1.min.js"></script>
+  <script src="JS/jquery-ui.min.js"></script>
+
+  <!--
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> -->
+
+
+  <script>
+    $(document).ready(function () {
+      // 完成載入才執行以下JS
+
+      // 若改變LMP
+      $("#LMP").change(function () {
+        var LMP = moment($("#LMP").val());
+        var EDC = LMP.clone().add(40, 'week');
+        var now = moment();
+        var GA = (now - LMP) / 86400000 / 7;
+        var GA_w = parseInt(GA);
+        var GA_d = parseInt((GA - GA_w) * 7);
+        $("#GA_w").val(GA_w);
+        $("#GA_d").val(GA_d);
+        $("#EDC").val(EDC.format('YYYYMMDD'));
+        var GA37 = LMP.clone().add(37, 'week');
+        var GA39 = LMP.clone().add(39, 'week');
+        $("#GA37").val(GA37.format('YYYYMMDD'));
+        $("#GA39").val(GA39.format('YYYYMMDD'));
+
+      });
+      // 若改變EDC
+      $("#EDC").change(function () {
+        var EDC = moment($("#EDC").val());
+        var LMP = EDC.clone().subtract(40, 'week');
+        var now = moment();
+        var GA = (now - LMP) / 86400000 / 7;
+        var GA_w = parseInt(GA);
+        var GA_d = parseInt((GA - GA_w) * 7);
+        $("#GA_w").val(GA_w);
+        $("#GA_d").val(GA_d);
+        $("#LMP").val(LMP.format('YYYYMMDD'));
+        var GA37 = LMP.clone().add(37, 'week');
+        var GA39 = LMP.clone().add(39, 'week');
+        $("#GA37").val(GA37.format('YYYYMMDD'));
+        $("#GA39").val(GA39.format('YYYYMMDD'));
+      });
+      // 若改變GA
+      $("#GA_w").change(GA_changed);
+      $("#GA_d").change(GA_changed);
+
+      // Datapicker
+      $("#LMP").datepicker({
+        dateFormat: 'yymmdd'
+      });
+      $("#EDC").datepicker({
+        dateFormat: 'yymmdd'
+      });
+
+      // 完成載入才執行以上JS
+
+
+    });
+    //Function script
+    function addWeek(week) {
+      $("#GA_w").val(parseInt($("#GA_w").val()) + week);
+      GA_changed();
+    }
+
+    function subWeek(week) {
+      $("#GA_w").val(parseInt($("#GA_w").val()) - week);
+      GA_changed();
+    }
+
+    function addDay(day) {
+      $("#GA_d").val(parseInt($("#GA_d").val()) + day);
+      GA_changed();
+    }
+
+    function subWeek(day) {
+      $("#GA_d").val(parseInt($("#GA_d").val()) - day);
+      GA_changed();
+    }
+
+    function GA_changed() {
+      var GA_w = $("#GA_w").val();
+      var GA_d = $("#GA_d").val();
+      var now = moment();
+      var GA = GA_w * 7 + GA_d * 1;
+      var LMP = now.clone().subtract(GA, 'day');
+      var EDC = LMP.clone().add(40, 'week');
+      $("#LMP").val(LMP.format('YYYYMMDD'));
+      $("#EDC").val(EDC.format('YYYYMMDD'));
+      var GA37 = LMP.clone().add(37, 'week');
+      var GA39 = LMP.clone().add(39, 'week');
+      $("#GA37").val(GA37.format('YYYYMMDD'));
+      $("#GA39").val(GA39.format('YYYYMMDD'));
+    }
+  </script>
+
+</head>
+
+<body>
+  <div id="wrapper">
+    <b>LMP</b>
+    <input type="text" value="20190101" id="LMP" />
+    <b>EDC</b>
+    <input type="text" value="20190101" id="EDC" />
+    <br>
+    <b>GA Today</b>
+    <input type="text" id="GA_w" value="40" />
+    <input type="text" id="GA_d" value="0" /><br />
+    <button onclick="javascript:addWeek(5)">+5w</button>
+    <button onclick="javascript:addWeek(1)">+1w</button>
+    <button onclick="javascript:addDay(1)">+1d</button>
+    <br />
+    <button onclick="javascript:addWeek(-5)">-5w</button>
+    <button onclick="javascript:addWeek(-1)">-1w</button>
+    <button onclick="javascript:addDay(-1)">-1d</button>
+    <br>
+    The date of GA 37 weeks is on <input type="text" value="" id="GA37" />
+    <br>
+    The date of GA 39 weeks is on <input type="text" value="" id="GA39" />
+  </div>
+
+</body>
+
+</html>

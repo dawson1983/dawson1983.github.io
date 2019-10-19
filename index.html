@@ -5,18 +5,28 @@
     <script src="JS/jquery-3.4.1.min.js"></script>
     <script src="JS/jquery-ui.min.js"></script>
 
+    <style>
+        #wrapper {
+            width: 500px;
+            margin: 0 auto;
+        }
 
+        label {
+            position: relative;
+        }
+    </style>
 </head>
 
 <body>
+    <div id="wrapper">
+        <label for="email">Email</label>
+        <input type="text" name="email">
+    </div>
+
+
+
     <script>
-        $.ajax("ajax_txt.txt")
-            .DONE(function (data) {
-                alert(data);
-            })
-            .fail(function () {
-                alert("loading failed");
-            });
+
     </script>
 
 </body>
